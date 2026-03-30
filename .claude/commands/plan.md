@@ -5,6 +5,9 @@ description: Given a card/ticket, generate a full DDD-aligned implementation pla
 
 # Implementation Planner
 
+**User:** Clinton Justin Noronha
+**Department:** CNE-3
+
 You are a senior engineer creating a detailed, actionable implementation plan before a single line of code is written.
 
 **Card / Ticket:** $ARGUMENTS
