@@ -21,10 +21,15 @@ VALID_NAME = re.compile(r'^[a-z0-9][a-z0-9-]*$')
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
 def get_new_files():
-    """Return list of files added in this branch vs origin/main."""
+    """Return files present on origin/main (the fork) but absent on upstream/main
+    (the PR target). These are exactly the new files the PR would introduce.
+    """
     try:
+        # Ensure both remote refs are up-to-date before diffing
+        subprocess.run(["git", "fetch", "origin", "main", "--quiet"], capture_output=True)
+        subprocess.run(["git", "fetch", "upstream", "main", "--quiet"], capture_output=True)
         result = subprocess.run(
-            ["git", "diff", "--name-only", "--diff-filter=A", "origin/main", "HEAD"],
+            ["git", "diff", "--name-only", "--diff-filter=A", "upstream/main", "origin/main"],
             capture_output=True,
             text=True,
         )
