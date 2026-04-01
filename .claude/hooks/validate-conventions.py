@@ -147,6 +147,9 @@ def validate_agents(parts, filepath):
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
+    # Ensure UTF-8 output on Windows (avoids cp1252 UnicodeEncodeError for emoji)
+    sys.stdout.reconfigure(encoding="utf-8")
+
     # 1. Parse the tool-call JSON from stdin
     try:
         tool_call = json.loads(sys.stdin.read())
