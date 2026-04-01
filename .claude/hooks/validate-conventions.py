@@ -159,12 +159,14 @@ def main():
     tool_name = tool_call.get("tool_name", "")
     tool_input = tool_call.get("tool_input", {})
 
-    # 2. Only intercept Skill calls that include "raise-pr"
-    if tool_name != "Skill":
+    # 2. Only intercept Bash calls that contain "gh pr create"
+    if tool_name != "Bash":
         sys.exit(0)
 
-    skill = tool_input.get("skill", "").lower()
-    if "raise-pr" not in skill:
+    command = tool_input.get("command", "")
+    # Match "gh pr create" only when gh is the actual command being invoked,
+    # not when it appears inside a quoted string (e.g. a git commit -m "...gh pr create...")
+    if not re.search(r'(?:^|&&|;|\|\||\n)\s*(?:\w+=\S+\s+)*gh\s+pr\s+create', command):
         sys.exit(0)
 
     # 3. Collect new files added in this branch
